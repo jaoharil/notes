@@ -1,72 +1,56 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import Navbar from './components/Navbar';
+import Sidebar from './components/Sidebar';
+import ChatSection from './components/ChatSection';
+import AddNoteForm from './components/AddNoteForm';
 import './App.css';
 
+const initialData = [
+  {
+    id: 1,
+    title: 'Babel',
+    body: 'Babel adalah tools open-source yang digunakan untuk mengubah sintaks ECMAScript 2015+ menjadi sintaks yang didukung oleh JavaScript engine versi lama.',
+    archived: false,
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: 2,
+    title: 'React',
+    body: 'React adalah library JavaScript untuk membangun UI.',
+    archived: false,
+    createdAt: new Date().toISOString(),
+  },
+];
+
 function App() {
-  const [notes, setNotes] = useState([]);
-  const [note, setNote] = useState('');
-  const [isTyping, setIsTyping] = useState(false); // Untuk menunjukkan apakah pengguna sedang mengetik
+  const [notes, setNotes] = useState(initialData);
+  const [searchKeyword, setSearchKeyword] = useState('');
+  const [selectedNote, setSelectedNote] = useState(null);
 
-  // Memuat data catatan dari localStorage saat aplikasi dimuat
-  useEffect(() => {
-    const savedNotes = localStorage.getItem('notes');
-    if (savedNotes) {
-      setNotes(JSON.parse(savedNotes));
-    }
-  }, []);
-
-  // Menyimpan data catatan ke localStorage setiap kali catatan berubah
-  useEffect(() => {
-    if (notes.length > 0) {
-      localStorage.setItem('notes', JSON.stringify(notes));
-    }
-  }, [notes]);
-
-  // Fungsi untuk menambahkan catatan
-  const addNote = () => {
-    if (note.trim()) {
-      const newNote = { text: note, time: new Date().toLocaleTimeString() };
-      setNotes([...notes, newNote]);
-      setNote('');
-      setIsTyping(false); // Reset status mengetik setelah menambah catatan
-    }
+  const handleAddNote = (note) => {
+    setNotes([note, ...notes]);
   };
 
-  // Fungsi untuk menghapus catatan
-  const deleteNote = (index) => {
-    const updatedNotes = notes.filter((_, i) => i !== index);
-    setNotes(updatedNotes); // Perbarui state dengan catatan yang telah dihapus
+  const handleDeleteNote = (id) => {
+    setNotes(notes.filter((note) => note.id !== id));
+    setSelectedNote(null);
   };
 
-  // Fungsi untuk menangani perubahan input
-  const handleInputChange = (e) => {
-    setNote(e.target.value);
-    setIsTyping(e.target.value.length > 0); // Menampilkan status mengetik
+  const handleToggleArchive = (id) => {
+    setNotes(notes.map((note) => (note.id === id ? { ...note, archived: !note.archived } : note)));
   };
+
+  const filteredNotes = notes.filter((note) => note.title.toLowerCase().includes(searchKeyword.toLowerCase()));
 
   return (
-    <div className="App">
-      <div className="chat-window">
-        <div className="chat-header">
-          <h1>Daftar Catatan</h1>
+    <div className="container">
+      <div className="app">
+        <Navbar searchKeyword={searchKeyword} setSearchKeyword={setSearchKeyword} />
+        <div className="app-body">
+          <Sidebar notes={filteredNotes} setSelectedNote={setSelectedNote} selectedNoteId={selectedNote?.id} />
+          <ChatSection note={selectedNote} onDeleteNote={handleDeleteNote} onToggleArchive={handleToggleArchive} />
+          <AddNoteForm onAddNote={handleAddNote} />
         </div>
-        <div className="chat-box">
-          {notes.map((note, index) => (
-            <div key={index} className="chat-bubble">
-              <div className="note-text">{note.text}</div>
-              <div className="note-time">{note.time}</div>
-              <button className="delete-btn" onClick={() => deleteNote(index)}>
-                Hapus
-              </button>
-            </div>
-          ))}
-        </div>
-        <div className="chat-footer">
-          <input type="text" value={note} onChange={handleInputChange} placeholder="Tulis catatan..." />
-          <button onClick={addNote} disabled={!note.trim()}>
-            Kirim
-          </button>
-        </div>
-        {isTyping && <div className="typing-indicator">Mengetik...</div>}
       </div>
     </div>
   );

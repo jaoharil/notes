@@ -1,0 +1,14 @@
+.chat-section {
+  flex: 1;
+  width: 30%;
+  padding: 20px;
+  background-color: #eaeaea;
+}
+
+.chat-section h2 {
+  color: #075e54;
+}
+
+.chat-section button {
+  margin-right: 10px;
+}

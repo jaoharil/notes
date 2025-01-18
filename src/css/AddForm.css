@@ -1,0 +1,39 @@
+.add-note-form {
+  padding: 10px;
+  width: 30%;
+  background-color: #f5f5f5;
+  border-top: 1px solid #ddd;
+}
+
+.add-note-form input,
+.add-note-form textarea {
+  width: 90%;
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.add-note-form button {
+  background-color: #075e54;
+  color: white;
+  border: 50px 50px solid;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+.error-message {
+  color: red;
+  font-size: 12px;
+  margin: 0;
+}
+.char-limit {
+  font-size: 12px;
+  color: #555;
+  margin: 0;
+  text-align: right;
+}
+.add-note-form button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
