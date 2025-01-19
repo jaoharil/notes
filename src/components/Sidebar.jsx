@@ -4,6 +4,7 @@ import '/src/css/Sidebar.css';
 function Sidebar({ notes, setSelectedNote, selectedNoteId }) {
   return (
     <div className="sidebar">
+      <div>Catatan Aktif</div>
       {notes.length === 0 ? (
         <p>Tidak ada catatan</p>
       ) : (

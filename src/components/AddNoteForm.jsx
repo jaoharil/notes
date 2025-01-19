@@ -4,15 +4,26 @@ import '/src/css/AddForm.css';
 function AddNoteForm({ onAddNote }) {
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
-  const [error, setError] = useState('');
+  const maxTitleLength = 50; // Batas maksimum karakter judul
+
+  const handleTitleChange = (e) => {
+    const input = e.target.value;
+    // Potong input jika panjangnya melebihi batas
+    if (input.length <= maxTitleLength) {
+      setTitle(input);
+    }
+  };
+
+  const handleBodyChange = (e) => {
+    setBody(e.target.value);
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!title || !body) {
-      setError('Harap isi semua form sebelum menambahkan catatan.');
+    if (title.trim() === '' || body.trim() === '') {
+      alert('Judul dan isi catatan tidak boleh kosong!');
       return;
     }
-    setError('');
     const newNote = {
       id: +new Date(),
       title,
@@ -27,10 +38,16 @@ function AddNoteForm({ onAddNote }) {
 
   return (
     <form className="add-note-form" onSubmit={handleSubmit}>
-      <input type="text" placeholder="Judul catatan..." value={title} maxLength="50" onChange={(e) => setTitle(e.target.value)} />
-      <p className="char-limit">{50 - title.length} karakter tersisa</p>
-      <textarea placeholder="Isi catatan..." value={body} onChange={(e) => setBody(e.target.value)}></textarea>
-      {error && <p className="error-message">{error}</p>}
+      <div className="form-group">
+        <label htmlFor="title">
+          Judul Catatan <span>({maxTitleLength - title.length} karakter tersisa)</span>
+        </label>
+        <input type="text" id="title" placeholder="Judul catatan..." value={title} onChange={handleTitleChange} />
+      </div>
+      <div className="form-group">
+        <label htmlFor="body">Isi Catatan</label>
+        <textarea id="body" placeholder="Isi catatan..." value={body} onChange={handleBodyChange}></textarea>
+      </div>
       <button type="submit" disabled={!title || !body}>
         Tambah Catatan
       </button>

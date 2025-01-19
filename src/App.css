@@ -1,8 +1,8 @@
 .app {
-  height: 90vh;
+  height: 100vh;
   display: flex;
   flex-direction: column;
-  width: 80%;
+
   border: 1px solid #ddd;
 }
 .container {
